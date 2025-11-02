@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "flexprotect",
-    "slug": "flexprotect",
+    "name": "flex-id-guard",
+    "slug": "flex-id-guard",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "flexprotect",
+    "scheme": "flexidguard",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -43,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8c40526d-7689-4b2c-8f4a-4ad0c3462938"
+      }
+    },
+    "owner": "teamflex"
   }
 }

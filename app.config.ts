@@ -17,7 +17,9 @@ export default {
     extra: {
       supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
       supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
-      appUrl: process.env.EXPO_PUBLIC_APP_URL
+      appUrl: process.env.EXPO_PUBLIC_APP_URL,
+      hibpApiKey: process.env.EXPO_PUBLIC_HIBP_API_KEY,
+      hibpUserAgent: process.env.EXPO_PUBLIC_HIBP_USER_AGENT,
     }
   }
 };

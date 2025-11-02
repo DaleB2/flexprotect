@@ -1,10 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import DashboardScreen from "./screens/DashboardScreen";
 import SettingsScreen from "./screens/SettingsScreen";
-
-type TabKey = "Dashboard" | "Settings";
+import { TabKey, TabsContext } from "../src/context/tabs";
 
 const tabs: Array<{
   key: TabKey;
@@ -17,35 +16,38 @@ const tabs: Array<{
 
 export default function Tabs() {
   const [activeTab, setActiveTab] = useState<TabKey>("Dashboard");
+  const value = useMemo(() => ({ activeTab, setActiveTab }), [activeTab]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        {activeTab === "Dashboard" ? <DashboardScreen /> : <SettingsScreen />}
+    <TabsContext.Provider value={value}>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          {activeTab === "Dashboard" ? <DashboardScreen /> : <SettingsScreen />}
+        </View>
+        <View style={styles.tabBar}>
+          {tabs.map((tab) => {
+            const focused = tab.key === activeTab;
+            return (
+              <Pressable
+                key={tab.key}
+                accessibilityRole="button"
+                style={styles.tabItem}
+                onPress={() => setActiveTab(tab.key)}
+              >
+                <Ionicons
+                  name={tab.icon}
+                  size={24}
+                  color={focused ? "#4F46E5" : "#B3A8D9"}
+                />
+                <Text style={[styles.tabLabel, focused && styles.tabLabelActive]}>
+                  {tab.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
-      <View style={styles.tabBar}>
-        {tabs.map((tab) => {
-          const focused = tab.key === activeTab;
-          return (
-            <Pressable
-              key={tab.key}
-              accessibilityRole="button"
-              style={styles.tabItem}
-              onPress={() => setActiveTab(tab.key)}
-            >
-              <Ionicons
-                name={tab.icon}
-                size={24}
-                color={focused ? "#4F46E5" : "#B3A8D9"}
-              />
-              <Text style={[styles.tabLabel, focused && styles.tabLabelActive]}>
-                {tab.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-    </View>
+    </TabsContext.Provider>
   );
 }
 

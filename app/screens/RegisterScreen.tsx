@@ -38,7 +38,12 @@ export default function SignUp() {
   };
 
   return (
-    <AuthShell title="Create Account">
+    <AuthShell
+      title="Create Account"
+      active="Register"
+      onSelectLogin={() => navigation.navigate("Login")}
+      onSelectRegister={() => navigation.navigate("Register")}
+    >
       <View style={{ gap: 14 }}>
         <View>
           <Text style={styles.label}>Full Name</Text>

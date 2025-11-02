@@ -1,13 +1,23 @@
 // src/components/AuthShell.tsx
-import { Link, usePathname } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-type Props = { title: string; children: React.ReactNode; };
+type Props = {
+  title: string;
+  children: React.ReactNode;
+  active: "Login" | "Register";
+  onSelectLogin: () => void;
+  onSelectRegister: () => void;
+};
 
-export default function AuthShell({ title, children }: Props) {
-  const path = usePathname();
-  const onSignIn = path.includes("/sign-in");
+export default function AuthShell({
+  title,
+  children,
+  active,
+  onSelectLogin,
+  onSelectRegister,
+}: Props) {
+  const onSignIn = active === "Login";
   return (
     <View style={s.wrap}>
       <View style={s.card}>
@@ -18,22 +28,26 @@ export default function AuthShell({ title, children }: Props) {
             <Text style={s.brand}>SmartSave</Text>
           </View>
 
-          <Text style={s.h1}>Welcome Back</Text>
+          <Text style={s.h1}>{title}</Text>
           <Text style={s.sub}>Welcome back, please enter your details</Text>
 
           {/* Tabs */}
           <View style={s.tabs}>
-<Link href="/(auth)/sign-in">
-  <View style={[s.tab, onSignIn && s.tabActive]}>
-    <Text style={[s.tabText, onSignIn && s.tabTextActive]}>Sign In</Text>
-  </View>
-</Link>
+            <Pressable
+              accessibilityRole="button"
+              onPress={onSelectLogin}
+              style={[s.tab, onSignIn && s.tabActive]}
+            >
+              <Text style={[s.tabText, onSignIn && s.tabTextActive]}>Sign In</Text>
+            </Pressable>
 
-<Link href="/(auth)/sign-up">
-  <View style={[s.tab, !onSignIn && s.tabActive]}>
-    <Text style={[s.tabText, !onSignIn && s.tabTextActive]}>Signup</Text>
-  </View>
-</Link>
+            <Pressable
+              accessibilityRole="button"
+              onPress={onSelectRegister}
+              style={[s.tab, !onSignIn && s.tabActive]}
+            >
+              <Text style={[s.tabText, !onSignIn && s.tabTextActive]}>Signup</Text>
+            </Pressable>
           </View>
 
           {/* Form area */}

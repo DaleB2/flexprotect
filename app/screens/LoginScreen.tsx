@@ -27,7 +27,12 @@ export default function SignIn() {
   };
 
   return (
-    <AuthShell title="Welcome Back">
+    <AuthShell
+      title="Welcome Back"
+      active="Login"
+      onSelectLogin={() => navigation.navigate("Login")}
+      onSelectRegister={() => navigation.navigate("Register")}
+    >
       <View style={{ gap: 14 }}>
         <View>
           <Text style={styles.label}>Email Address</Text>

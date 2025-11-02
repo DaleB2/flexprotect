@@ -1,18 +1,19 @@
 // app/(auth)/sign-in.tsx
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthShell from "../../src/components/AuthShell";
 import { supabase } from "../../src/lib/supabase";
-import type { RootParamList } from "../RootNavigator";
 
-export default function SignIn() {
+type Props = {
+  onSelectLogin: () => void;
+  onSelectRegister: () => void;
+};
+
+export default function SignIn({ onSelectLogin, onSelectRegister }: Props) {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
 
   const onSubmit = async () => {
     setErr(null);
@@ -23,15 +24,14 @@ export default function SignIn() {
       setErr(error.message || "Invalid email or password.");
       return;
     }
-    navigation.reset({ index: 0, routes: [{ name: "App" }] });
   };
 
   return (
     <AuthShell
       title="Welcome Back"
       active="Login"
-      onSelectLogin={() => navigation.navigate("Login")}
-      onSelectRegister={() => navigation.navigate("Register")}
+      onSelectLogin={onSelectLogin}
+      onSelectRegister={onSelectRegister}
     >
       <View style={{ gap: 14 }}>
         <View>

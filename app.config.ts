@@ -13,9 +13,7 @@ export default {
     ios: { supportsTablet: true },
     android: { adaptiveIcon: { foregroundImage: "./assets/icon.png", backgroundColor: "#ffffff" } },
     web: { bundler: "metro" },
-    plugins: [
-      "expo-router"           // ← required so Router can write config
-    ],
+    plugins: [],
     extra: {
       supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
       supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,

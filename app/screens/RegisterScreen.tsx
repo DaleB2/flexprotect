@@ -1,9 +1,11 @@
 // app/(auth)/sign-up.tsx
-import { router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthShell from "../../src/components/AuthShell";
 import { supabase } from "../../src/lib/supabase";
+import type { RootParamList } from "../RootNavigator";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -13,6 +15,7 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
+  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
 
   const onSubmit = async () => {
     setErr(null); setOk(null);
@@ -31,7 +34,7 @@ export default function SignUp() {
       setOk("Check your email to confirm your account, then sign in.");
       return;
     }
-    router.replace("/(tabs)/dashboard");
+    navigation.reset({ index: 0, routes: [{ name: "App" }] });
   };
 
   return (

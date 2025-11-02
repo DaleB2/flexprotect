@@ -1,15 +1,18 @@
 // app/(auth)/sign-in.tsx
-import { router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthShell from "../../src/components/AuthShell";
 import { supabase } from "../../src/lib/supabase";
+import type { RootParamList } from "../RootNavigator";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
 
   const onSubmit = async () => {
     setErr(null);
@@ -20,7 +23,7 @@ export default function SignIn() {
       setErr(error.message || "Invalid email or password.");
       return;
     }
-    router.replace("/(tabs)/dashboard");
+    navigation.reset({ index: 0, routes: [{ name: "App" }] });
   };
 
   return (

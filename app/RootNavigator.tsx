@@ -1,39 +1,36 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../src/context/auth";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import Tabs from "./Tabs";
 
-export type RootParamList = {
-  App: undefined;
-  Login: undefined;
-  Register: undefined;
-};
-
-const Stack = createNativeStackNavigator<RootParamList>();
+type AuthScreen = "Login" | "Register";
 
 export default function RootNavigator() {
   const { user, loading } = useAuth();
+  const [authScreen, setAuthScreen] = useState<AuthScreen>("Login");
+
+  useEffect(() => {
+    if (!user) {
+      setAuthScreen("Login");
+    }
+  }, [user]);
 
   if (loading) return null;
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        id="root"
-        screenOptions={{ headerShown: false, animation: "fade" }}
-      >
-        {user ? (
-          <Stack.Screen name="App" component={Tabs} />
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  if (!user) {
+    return authScreen === "Login" ? (
+      <LoginScreen
+        onSelectLogin={() => setAuthScreen("Login")}
+        onSelectRegister={() => setAuthScreen("Register")}
+      />
+    ) : (
+      <RegisterScreen
+        onSelectLogin={() => setAuthScreen("Login")}
+        onSelectRegister={() => setAuthScreen("Register")}
+      />
+    );
+  }
+
+  return <Tabs />;
 }

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthShell from "../../src/components/AuthShell";
 import { supabase } from "../../src/lib/supabase";
+import { setMonitoredEmail } from "../../src/lib/api";
 
 type Props = {
   onSelectLogin: () => void;
@@ -14,6 +15,7 @@ export default function SignUp({ onSelectLogin, onSelectRegister }: Props) {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [monitorEmail, setMonitorEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
@@ -30,9 +32,17 @@ export default function SignUp({ onSelectLogin, onSelectRegister }: Props) {
     setLoading(false);
 
     if (error) return setErr(error.message || "Could not create your account.");
-    // If email confirmation is ON in Supabase, you’ll receive a pending user.
+
+    if (data.session?.user && monitorEmail.trim()) {
+      try {
+        await setMonitoredEmail(data.session.user.id, monitorEmail.trim());
+      } catch (setErrAny) {
+        console.warn("Failed to set monitored email on sign up", setErrAny);
+      }
+    }
+
     if (data.user && !data.session) {
-      setOk("Check your email to confirm your account, then sign in.");
+      setOk("Check your email to confirm your account, then sign in. You can add your monitored email from Settings anytime.");
       return;
     }
   };
@@ -72,6 +82,19 @@ export default function SignUp({ onSelectLogin, onSelectRegister }: Props) {
           <TextInput value={confirm} onChangeText={setConfirm} placeholder="••••••••" secureTextEntry style={styles.input} />
         </View>
 
+        <View>
+          <Text style={styles.label}>Email to monitor (optional)</Text>
+          <TextInput
+            value={monitorEmail}
+            onChangeText={setMonitorEmail}
+            placeholder="Free plan includes 1"
+            autoCapitalize="none"
+            inputMode="email"
+            style={styles.input}
+          />
+          <Text style={styles.helper}>Free plan: monitor 1 email + check passwords via Have I Been Pwned.</Text>
+        </View>
+
         {!!err && <Text style={styles.error}>{err}</Text>}
         {!!ok && <Text style={styles.ok}>{ok}</Text>}
 
@@ -98,4 +121,5 @@ const styles = StyleSheet.create({
   ctaText: { color: "#fff", fontWeight: "700" },
   error: { color: "#B42318", backgroundColor: "#FEE4E2", borderRadius: 8, padding: 10, borderWidth: 1, borderColor: "#FDA29B" },
   ok: { color: "#027A48", backgroundColor: "#ECFDF3", borderRadius: 8, padding: 10, borderWidth: 1, borderColor: "#ABEFC6" },
+  helper: { color: "#6b7280", marginTop: 6, fontSize: 12 },
 });

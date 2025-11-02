@@ -1,20 +1,47 @@
 import { Pressable, StyleSheet, Text, ViewStyle } from "react-native";
 
-export default function Button({ title, onPress, style }: { title: string; onPress?: () => void; style?: ViewStyle }) {
+type Props = {
+  title: string;
+  onPress?: () => void;
+  style?: ViewStyle;
+  disabled?: boolean;
+  variant?: "primary" | "secondary" | "ghost";
+};
+
+export default function Button({ title, onPress, style, disabled, variant = "primary" }: Props) {
+  const palette = variantStyles[variant] ?? variantStyles.primary;
   return (
-    <Pressable onPress={onPress} style={[styles.btn, style]}>
-      <Text style={styles.txt}>{title}</Text>
+    <Pressable
+      onPress={disabled ? undefined : onPress}
+      style={[styles.btn, palette.button, disabled && styles.disabled, style]}
+    >
+      <Text style={[styles.txt, palette.text]}>{title}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: "#2563eb",
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 10,
-    alignSelf: "flex-start"
+    paddingVertical: 11,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignSelf: "flex-start",
   },
-  txt: { color: "#fff", fontWeight: "700" }
+  txt: { fontWeight: "700", fontSize: 15 },
+  disabled: { opacity: 0.6 },
 });
+
+const variantStyles = {
+  primary: StyleSheet.create({
+    button: { backgroundColor: "#0A66FF" },
+    text: { color: "#fff" },
+  }),
+  secondary: StyleSheet.create({
+    button: { backgroundColor: "#E8EDFF" },
+    text: { color: "#0A66FF" },
+  }),
+  ghost: StyleSheet.create({
+    button: { backgroundColor: "transparent" },
+    text: { color: "#0A66FF" },
+  }),
+} as const;

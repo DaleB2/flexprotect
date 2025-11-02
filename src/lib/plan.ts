@@ -37,6 +37,16 @@ export async function getPlan(userId: string): Promise<Plan> {
   }
 
   return plan;
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("plan")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) {
+    console.warn("getPlan error", error.message);
+    return "free";
+  }
+  return (data?.plan as Plan) ?? "free";
 }
 
 export function canAddMonitoredEmail(plan: Plan, currentCount: number): boolean {
